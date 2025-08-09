@@ -13,12 +13,31 @@ export default function Hero(){
         fileInputRef.current?.click()
     }
 
-    const handleUpload = () => {
+    const handleUpload = (e : React.ChangeEvent<HTMLInputElement>) => {
+        if(e.target.files && e.target.files.length > 0){
+            const file = e.target.files[0]
+            console.log("Uploading: ", file.name)
 
+            // Make a generate link function which will take the link
+            // from the S3 and make it a public URL
+
+            const generatedLink = 'https';
+            // const generatedLink = getLink(file.name)
+
+            setFileLink(generatedLink);
+            setIsUploaded(true);
+        }
     }
 
     const handleCopyLink = () => {
-
+        navigator.clipboard.writeText(fileLink)
+            .then(() => {
+                // TODO : Add a toaster instead
+                alert("Link copied to clipboard")
+            })
+            .catch(() => {
+                alert("Failed to copy link")
+            })
     }
 
     return (
@@ -45,7 +64,7 @@ export default function Hero(){
                             Copy link
                         </button>
                     ) : (
-                        <button onClick={handleUpload} className="px-4 text-2xl py-2 border-2 border-dashed rounded-lg hover:bg-gray-100 hover:text-black cursor-pointer">
+                        <button className="px-4 text-2xl py-2 border-2 border-dashed rounded-lg hover:bg-gray-100 hover:text-black cursor-pointer">
                             Upload
                         </button>
                     )
