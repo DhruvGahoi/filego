@@ -1,5 +1,4 @@
 import { S3Client, GetObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
-import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { NextRequest, NextResponse } from "next/server";
 import JSZip from 'jszip';
 
@@ -23,6 +22,7 @@ export async function POST(request: NextRequest) {
 
     console.log('Creating zip for keys:', keys);
 
+    // Create a zip file
     const zip = new JSZip();
     
     // Download each file from S3 and add to zip
@@ -46,6 +46,7 @@ export async function POST(request: NextRequest) {
         }
       } catch (error) {
         console.error(`Error downloading file ${key}:`, error);
+        // Continue with other files even if one fails
       }
     }
 
@@ -66,14 +67,9 @@ export async function POST(request: NextRequest) {
     await s3.send(putCommand);
     console.log('Zip file uploaded successfully:', zipKey);
 
-    // Generate presigned download URL for the zip
-    const downloadCommand = new GetObjectCommand({
-      Bucket: process.env.S3_BUCKET,
-      Key: zipKey,
-      ResponseContentDisposition: `attachment; filename="${folderName || 'files'}-${timestamp}.zip"`,
-    });
-
-    const downloadUrl = await getSignedUrl(s3, downloadCommand, { expiresIn: 3600 });
+    // Generate clean download URL (no credentials exposed)
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
+    const downloadUrl = `${baseUrl}/api/download/${encodeURIComponent(zipKey)}`;
 
     return NextResponse.json({
       success: true,
