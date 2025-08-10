@@ -1,9 +1,6 @@
-<<<<<<< HEAD
-Sharable file/ folders 
-=======
-# FileGo - File Upload Service
+# FileGo
 
-A modern file upload service built with Next.js that allows users to upload files and folders to AWS S3 and get signed URLs for sharing.
+A modern file upload service built with Next.js that allows users to upload files and folders and get the downloadable URLs for sharing.
 
 ## Features
 

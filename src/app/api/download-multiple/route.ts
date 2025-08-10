@@ -23,7 +23,6 @@ export async function POST(request: NextRequest) {
 
     console.log('Creating zip for keys:', keys);
 
-    // Create a zip file
     const zip = new JSZip();
     
     // Download each file from S3 and add to zip
@@ -47,7 +46,6 @@ export async function POST(request: NextRequest) {
         }
       } catch (error) {
         console.error(`Error downloading file ${key}:`, error);
-        // Continue with other files even if one fails
       }
     }
 
