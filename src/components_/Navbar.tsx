@@ -3,7 +3,6 @@
 import Image from "next/image"
 import ThemeToggle from "./ThemeToggle"
 
-
 export default function Navbar() {
     return (
         <div className="items-center justify-between flex w-full border-b-3 h-16 px-4 
