@@ -74,7 +74,7 @@ export async function uploadToS3(
         let errorData;
         try {
           errorData = await response.json();
-        } catch (parseError) {
+        } catch {
           const errorText = await response.text();
           errorData = { error: `HTTP ${response.status}: ${errorText}` };
         }
@@ -89,8 +89,8 @@ export async function uploadToS3(
       let responseData;
       try {
         responseData = await response.json();
-      } catch (parseError) {
-        console.error('Failed to parse API response:', parseError);
+      } catch {
+        console.error('Failed to parse API response');
         results.push({
           success: false,
           error: 'Invalid API response format',
@@ -160,7 +160,7 @@ export async function uploadToS3(
         let downloadErrorData;
         try {
           downloadErrorData = await downloadResponse.json();
-        } catch (parseError) {
+        } catch {
           const errorText = await downloadResponse.text();
           downloadErrorData = { error: `HTTP ${downloadResponse.status}: ${errorText}` };
         }
@@ -255,7 +255,7 @@ export async function uploadToS3Server(
         let errorData;
         try {
           errorData = await response.json();
-        } catch (parseError) {
+        } catch {
           const errorText = await response.text();
           errorData = { error: `HTTP ${response.status}: ${errorText}` };
         }

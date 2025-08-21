@@ -12,26 +12,27 @@ const s3 = new S3Client({
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { key: string } }
+  { params }: { params: Promise<{ key: string }> }
 ) {
   try {
-    const key = decodeURIComponent(params.key);
-    console.log('Downloading file with key:', key);
+    const { key } = await params;
+    const decodedKey = decodeURIComponent(key);
+    console.log('Downloading file with key:', decodedKey);
     
     const command = new GetObjectCommand({
       Bucket: process.env.S3_BUCKET,
-      Key: key,
+      Key: decodedKey,
     });
 
     const response = await s3.send(command);
     
     if (!response.Body) {
-      console.error('File not found:', key);
+      console.error('File not found:', decodedKey);
       return NextResponse.json({ error: "File not found" }, { status: 404 });
     }
 
     // Extract original filename from key
-    const keyParts = key.split('/');
+    const keyParts = decodedKey.split('/');
     const fileNameWithTimestamp = keyParts[keyParts.length - 1];
     const originalName = fileNameWithTimestamp.substring(fileNameWithTimestamp.indexOf('-') + 1);
 
