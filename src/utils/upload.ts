@@ -175,8 +175,8 @@ export async function uploadToS3(
       let downloadData;
       try {
         downloadData = await downloadResponse.json();
-      } catch (parseError) {
-        console.error('Failed to parse download response:', parseError);
+      } catch {
+        console.error('Failed to parse download response');
         results.push({
           success: false,
           error: 'Invalid download response format',
