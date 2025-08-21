@@ -1,5 +1,6 @@
 import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
 import { NextRequest, NextResponse } from "next/server";
+import { Readable } from "stream";
 
 const s3 = new S3Client({ 
   region: process.env.AWS_REGION,
@@ -38,7 +39,7 @@ export async function GET(
 
     // Convert stream to buffer
     const chunks = [];
-    for await (const chunk of response.Body as any) {
+    for await (const chunk of response.Body as Readable) {
       chunks.push(chunk);
     }
     const buffer = Buffer.concat(chunks);
